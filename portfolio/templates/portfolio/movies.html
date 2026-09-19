@@ -1,0 +1,34 @@
+{% extends "portfolio/base.html" %}
+{% block title %}Favourite movies — {{ profile.full_name|default:"Umme Habiba" }}{% endblock %}
+{% block body_class %}fan-page fan-movies{% endblock %}
+
+{% block content %}
+<section class="fan-header">
+  <div class="fan-icon" aria-hidden="true">
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="16" width="48" height="32" rx="4" stroke="currentColor" stroke-width="2.5"/>
+      <path d="M8 24h48M20 16v8M36 16v8" stroke="currentColor" stroke-width="2.5"/>
+    </svg>
+  </div>
+  <h1>Movies</h1>
+  <p class="fan-sub">Screen time well spent.</p>
+</section>
+
+<section class="fan-grid" id="fanGrid">
+  {% if items %}
+    {% for item in items %}
+      <article class="fan-card {% if forloop.first %}is-favorite{% endif %}" style="--i: {{ forloop.counter0 }};">
+        {% if forloop.first %}<span class="fan-badge">Favourite</span>{% endif %}
+        <div class="fan-card-cover">{{ item.title|slice:":2"|upper }}</div>
+        <h3 class="fan-card-title">{{ item.title }}</h3>
+        {% if item.subtitle_or_creator %}<p class="fan-card-sub">{{ item.subtitle_or_creator }}</p>{% endif %}
+        {% if item.description %}<p class="fan-card-note">{{ item.description }}</p>{% endif %}
+      </article>
+    {% endfor %}
+  {% else %}
+    <p class="fan-empty">No favourite movies added yet — check back soon.</p>
+  {% endif %}
+</section>
+
+<a class="back-link back-link-center" href="{% url 'favorites_hub' %}">← Back to favourite things</a>
+{% endblock %}

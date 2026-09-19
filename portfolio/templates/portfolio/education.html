@@ -1,0 +1,31 @@
+{% extends "portfolio/base.html" %}
+{% block title %}Education — {{ profile.full_name|default:"Umme Habiba" }}{% endblock %}
+{% block body_class %}content-page{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow-plain">Education</p>
+  <h1>Where it was learned</h1>
+</section>
+
+{% if education %}
+  <section class="edu-list">
+    {% for item in education %}
+      <div class="edu-item">
+        <div class="edu-level">{{ item.level }}</div>
+        <div>
+          <div class="edu-inst">{{ item.institution_name }}</div>
+          <div class="edu-meta">
+            {{ item.degree_title }}{% if item.degree_title and item.passing_year %} · {% endif %}{{ item.passing_year }}
+          </div>
+          {% if item.description %}
+            <div class="edu-desc">{{ item.description }}</div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </section>
+{% else %}
+  <p class="fav-empty">No education details added yet — add them from the admin panel.</p>
+{% endif %}
+{% endblock %}

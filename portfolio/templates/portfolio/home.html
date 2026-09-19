@@ -1,0 +1,59 @@
+{% extends "portfolio/base.html" %}
+{% block title %}{{ profile.full_name|default:"Umme Habiba" }} — Home{% endblock %}
+{% block body_class %}lamp-page{% endblock %}
+
+{% block content %}
+<section class="lamp-scene" id="lampScene">
+  <div class="lamp-scene-glow"></div>
+
+  <div class="lamp-rig">
+    <div class="lamp-mount"></div>
+    <div class="lamp-wire"></div>
+    <div class="lamp-bulb" id="lampBulb">
+      <span class="lamp-filament"></span>
+    </div>
+    <button class="lamp-pull" id="lampPull" aria-pressed="false" aria-label="Pull the cord to switch the light on">
+      <span class="lamp-cord"></span>
+      <span class="lamp-bead"></span>
+    </button>
+  </div>
+
+  <p class="lamp-hint" id="lampHint">Pull the cord to switch the light on.</p>
+  <p class="lamp-hint lamp-hint-off">It's a little dark in here.</p>
+
+  <div class="orbit-wrap">
+    <div class="orbit" style="--radius: 150px;">
+      <div class="orbit-ring"></div>
+      <div class="orbit-track" style="--count: 4;">
+        <a href="{% url 'contact' %}" class="orbit-item" style="--angle: -90deg;">
+          <span class="orbit-item-inner"><span class="orbit-item-spin">
+            <span class="orbit-dot"></span>
+            <span class="orbit-label">Contact me</span></span>
+          </span>
+        </a>
+        <a href="{% url 'education_page' %}" class="orbit-item" style="--angle: 0deg;">
+          <span class="orbit-item-inner"><span class="orbit-item-spin">
+            <span class="orbit-dot"></span>
+            <span class="orbit-label">Education</span></span>
+          </span>
+        </a>
+        <a href="{% url 'favorites_hub' %}" class="orbit-item" style="--angle: 90deg;">
+          <span class="orbit-item-inner"><span class="orbit-item-spin">
+            <span class="orbit-dot"></span>
+            <span class="orbit-label">Favourite things</span></span>
+          </span>
+        </a>
+        <a href="{% url 'about' %}" class="orbit-item" style="--angle: 180deg;">
+          <span class="orbit-item-inner"><span class="orbit-item-spin">
+            <span class="orbit-dot"></span>
+            <span class="orbit-label">About me</span></span>
+          </span>
+        </a>
+      </div>
+      <div class="orbit-center">
+        <span class="orbit-center-name">{{ first_name }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

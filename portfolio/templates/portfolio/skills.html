@@ -1,0 +1,20 @@
+{% extends "portfolio/base.html" %}
+{% block title %}Skills — {{ profile.full_name|default:"Umme Habiba" }}{% endblock %}
+{% block body_class %}content-page{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow-plain">Skills</p>
+  <h1>What she's good at</h1>
+</section>
+
+{% if skills %}
+  <section class="edu-list">
+    {% for item in skills %}
+      <span class="skill-pill">{{ item.name }}</span>
+    {% endfor %}
+  </section>
+{% else %}
+  <p class="fav-empty" style="text-align:center;">No skills added yet — add them from the admin panel.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,221 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin login — Umme Habiba</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'portfolio/css/style.css' %}">
+<style>
+  /* ---------- Lamp-pull login scene ---------- */
+  .lamp-scene {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 56px;
+    flex-wrap: wrap;
+    padding: 24px;
+    background: #14101c;
+    transition: background 0.9s ease;
+  }
+  .lamp-scene.on {
+    background: var(--hero-grad);
+  }
+
+  .lamp-hint {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.6);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    transition: opacity 0.5s ease;
+  }
+  .lamp-scene.on .lamp-hint { opacity: 0; pointer-events: none; }
+
+  .lamp-illustration {
+    position: relative;
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .lamp-glow {
+    position: absolute;
+    top: -40px;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 224, 158, 0.9) 0%, rgba(255, 200, 120, 0.35) 40%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.9s ease;
+    pointer-events: none;
+  }
+  .lamp-scene.on .lamp-glow { opacity: 1; }
+
+  .lamp-shade {
+    position: relative;
+    width: 140px;
+    height: 74px;
+    border-radius: 70px 70px 10px 10px;
+    background: #ECE6DA;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    transition: background 0.6s ease, box-shadow 0.6s ease;
+  }
+  .lamp-scene.on .lamp-shade {
+    background: #FFF6E0;
+    box-shadow: 0 6px 24px rgba(255, 210, 120, 0.6);
+  }
+  .lamp-pole {
+    width: 10px;
+    height: 90px;
+    background: #C9C2D6;
+    margin-top: -4px;
+  }
+  .lamp-base {
+    width: 92px;
+    height: 14px;
+    border-radius: 8px;
+    background: #C9C2D6;
+    margin-top: -2px;
+  }
+
+  .lamp-cord {
+    position: absolute;
+    top: 68px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 6px;
+  }
+  .lamp-cord .string {
+    width: 2px;
+    height: 46px;
+    background: rgba(255,255,255,0.5);
+  }
+  .lamp-cord .bead {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--pink);
+    margin-top: -2px;
+    transition: background 0.4s ease;
+  }
+  .lamp-scene.on .lamp-cord .bead { background: var(--sea-green); }
+  .lamp-cord.pulled .string,
+  .lamp-cord.pulled .bead {
+    animation: cordPull 0.5s ease;
+  }
+  @keyframes cordPull {
+    0%   { transform: translateY(0) rotate(0deg); }
+    30%  { transform: translateY(6px) rotate(4deg); }
+    60%  { transform: translateY(-2px) rotate(-3deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+  }
+  .lamp-cord:focus-visible { outline: 2px solid var(--pink); outline-offset: 4px; border-radius: 8px; }
+
+  .login-card {
+    opacity: 0;
+    transform: translateY(18px);
+    pointer-events: none;
+    transition: opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s;
+  }
+  .lamp-scene.on .login-card {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lamp-cord.pulled .string, .lamp-cord.pulled .bead { animation: none; }
+    .login-card, .lamp-scene, .lamp-glow, .lamp-shade { transition: opacity 0.3s ease; }
+  }
+
+  @media (max-width: 560px) {
+    .lamp-scene { gap: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="lamp-scene" id="lampScene">
+  <div class="lamp-hint">Pull the cord to light up and sign in</div>
+
+  <div class="lamp-illustration">
+    <div class="lamp-glow"></div>
+    <div class="lamp-shade"></div>
+    <div class="lamp-pole"></div>
+    <div class="lamp-base"></div>
+    <button type="button" class="lamp-cord" id="lampCord" aria-label="Pull the cord to turn on the lamp and reveal the login form">
+      <span class="string"></span>
+      <span class="bead"></span>
+    </button>
+  </div>
+
+  <div class="login-card" id="loginCard">
+    <h1>Admin login</h1>
+    <p class="sub">Sign in to edit the portfolio content.</p>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="flash {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit" class="btn primary" style="width:100%; justify-content:center;">Log in</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var scene = document.getElementById('lampScene');
+    var cord = document.getElementById('lampCord');
+    var lit = false;
+
+    function toggleLamp() {
+      lit = !lit;
+      scene.classList.toggle('on', lit);
+      cord.classList.remove('pulled');
+      // restart the pull animation each click
+      void cord.offsetWidth;
+      cord.classList.add('pulled');
+      if (lit) {
+        setTimeout(function () {
+          var first = document.getElementById('username');
+          if (first) first.focus();
+        }, 500);
+      }
+    }
+
+    cord.addEventListener('click', toggleLamp);
+    cord.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleLamp();
+      }
+    });
+  })();
+</script>
+</body>
+</html>

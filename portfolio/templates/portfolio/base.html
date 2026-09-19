@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}{{ profile.full_name|default:"Umme Habiba" }}{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'portfolio/css/style.css' %}">
+{% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+<header class="site-nav">
+  <div class="site-nav-inner">
+    <a class="brand" href="{% url 'index' %}">{{ profile.full_name|default:"Umme Habiba" }}</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav-links" id="navLinks">
+      <a href="{% url 'index' %}" class="{% if request.path == '/' %}is-active{% endif %}">Home</a>
+      <a href="{% url 'about' %}" class="{% if request.path == '/about' %}is-active{% endif %}">About</a>
+      <a href="{% url 'education_page' %}" class="{% if request.path == '/education' %}is-active{% endif %}">Education</a>
+      <a href="{% url 'skills_page' %}" class="{% if request.path == '/skills' %}is-active{% endif %}">Skills</a>
+      <a href="{% url 'favorites_hub' %}" class="{% if '/favorites' in request.path %}is-active{% endif %}">Favourite things</a>
+      <a href="{% url 'contact' %}" class="{% if request.path == '/contact' %}is-active{% endif %}">Contact</a>
+      <a href="{% url 'login' %}" class="nav-admin">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+{% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="rule"></div>
+  <div class="footer-inner">
+    <span>{{ profile.full_name|default:"Umme Habiba" }} · built with care</span>
+    <span class="footer-dedication">It's for you Moni 😘</span>
+  </div>
+</footer>
+
+<script src="{% static 'portfolio/js/script.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,55 @@
+{% extends "portfolio/base.html" %}
+{% block title %}Favourite things — {{ profile.full_name|default:"Umme Habiba" }}{% endblock %}
+{% block body_class %}lamp-page{% endblock %}
+
+{% block content %}
+<section class="lamp-scene" id="lampScene">
+  <div class="lamp-scene-glow"></div>
+
+  <div class="lamp-rig">
+    <div class="lamp-mount"></div>
+    <div class="lamp-wire"></div>
+    <div class="lamp-bulb" id="lampBulb">
+      <span class="lamp-filament"></span>
+    </div>
+    <button class="lamp-pull" id="lampPull" aria-pressed="false" aria-label="Pull the cord to switch the light on">
+      <span class="lamp-cord"></span>
+      <span class="lamp-bead"></span>
+    </button>
+  </div>
+
+  <p class="lamp-hint">Pull the cord to see what she loves.</p>
+  <p class="lamp-hint lamp-hint-off">It's a little dark in here.</p>
+
+  <div class="orbit-wrap">
+    <div class="orbit" style="--radius: 140px;">
+      <div class="orbit-ring"></div>
+      <div class="orbit-track" style="--count: 3;">
+        <a href="{% url 'favorite_movies' %}" class="orbit-item" style="--angle: -90deg;">
+          <span class="orbit-item-inner"><span class="orbit-item-spin">
+            <span class="orbit-dot orbit-dot-movies"></span>
+            <span class="orbit-label">Movies</span></span>
+          </span>
+        </a>
+        <a href="{% url 'favorite_music' %}" class="orbit-item" style="--angle: 30deg;">
+          <span class="orbit-item-inner"><span class="orbit-item-spin">
+            <span class="orbit-dot orbit-dot-music"></span>
+            <span class="orbit-label">Music</span></span>
+          </span>
+        </a>
+        <a href="{% url 'favorite_books' %}" class="orbit-item" style="--angle: 150deg;">
+          <span class="orbit-item-inner"><span class="orbit-item-spin">
+            <span class="orbit-dot orbit-dot-books"></span>
+            <span class="orbit-label">Books</span></span>
+          </span>
+        </a>
+      </div>
+      <div class="orbit-center">
+        <span class="orbit-center-name">Loves</span>
+      </div>
+    </div>
+  </div>
+
+  <a class="back-link" href="{% url 'index' %}">← Back home</a>
+</section>
+{% endblock %}

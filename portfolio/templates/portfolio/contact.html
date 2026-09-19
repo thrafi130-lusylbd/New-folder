@@ -1,0 +1,31 @@
+{% extends "portfolio/base.html" %}
+{% block title %}Contact — {{ profile.full_name|default:"Umme Habiba" }}{% endblock %}
+{% block body_class %}content-page{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow-plain">Contact</p>
+  <h1>Get in touch</h1>
+</section>
+
+<section class="contact-card">
+  {% if profile.email or profile.location %}
+    <ul class="contact-list">
+      {% if profile.email %}
+        <li>
+          <span class="contact-label">Email</span>
+          <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+        </li>
+      {% endif %}
+      {% if profile.location %}
+        <li>
+          <span class="contact-label">Location</span>
+          <span>{{ profile.location }}</span>
+        </li>
+      {% endif %}
+    </ul>
+  {% else %}
+    <p class="fav-empty">Contact details are coming soon — add them from the admin panel.</p>
+  {% endif %}
+</section>
+{% endblock %}

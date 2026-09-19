@@ -1,0 +1,26 @@
+{% extends "portfolio/base.html" %}
+{% load static %}
+{% block title %}About — {{ profile.full_name|default:"Umme Habiba" }}{% endblock %}
+{% block body_class %}content-page{% endblock %}
+
+{% block content %}
+<section class="about-hero">
+  <div class="about-avatar">
+    {% if profile.profile_image %}
+      <img src="{% static profile.profile_image %}" alt="{{ profile.full_name }}">
+    {% else %}
+      <span>{{ profile.full_name|default:"Umme Habiba"|slice:":2"|upper }}</span>
+    {% endif %}
+  </div>
+  <div>
+    <p class="eyebrow-plain">About me</p>
+    <h1 class="about-name">{{ profile.full_name|default:"Umme Habiba" }}</h1>
+    {% if profile.occupation %}<p class="about-role">{{ profile.occupation }}</p>{% endif %}
+    {% if profile.bio %}
+      <p class="about-bio">{{ profile.bio }}</p>
+    {% else %}
+      <p class="about-bio about-bio-empty">This bio is still being written — check back soon.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

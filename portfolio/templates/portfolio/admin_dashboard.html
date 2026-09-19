@@ -1,0 +1,223 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin dashboard — Umme Habiba</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'portfolio/css/style.css' %}">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">Admin dashboard</div>
+    <div style="display:flex; gap:10px;">
+      <a class="btn" href="{% url 'index' %}">View site</a>
+      <a class="btn danger" href="{% url 'logout' %}">Log out</a>
+    </div>
+  </div>
+</div>
+
+<div class="admin-wrap">
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="flash {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Profile settings -->
+  <div class="admin-card">
+    <h2>Profile settings</h2>
+    <form method="POST" action="{% url 'update_profile' %}">
+      {% csrf_token %}
+      <div class="field">
+        <label for="full_name">Full name</label>
+        <input type="text" id="full_name" name="full_name" value="{{ profile.full_name }}">
+      </div>
+      <div class="field">
+        <label for="occupation">Occupation</label>
+        <input type="text" id="occupation" name="occupation" value="{{ profile.occupation }}">
+      </div>
+      <div class="field">
+        <label for="bio">Bio (write it yourself — this is your voice)</label>
+        <textarea id="bio" name="bio" placeholder="Write your own story here...">{{ profile.bio }}</textarea>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="email">Email (shown on the Contact page)</label>
+          <input type="email" id="email" name="email" value="{{ profile.email }}">
+        </div>
+        <div class="field">
+          <label for="location">Location (shown on the Contact page)</label>
+          <input type="text" id="location" name="location" value="{{ profile.location }}">
+        </div>
+      </div>
+      <button type="submit" class="btn primary">Save profile</button>
+    </form>
+  </div>
+
+  <!-- Academic details -->
+  <div class="admin-card">
+    <h2>Academic details</h2>
+
+    {% for item in education %}
+      <div class="list-item">
+        <div>
+          <strong>{{ item.level }}</strong> — {{ item.institution_name }}<br>
+          <span style="color:var(--text-soft); font-size:0.88rem;">
+            {{ item.degree_title }}{% if item.degree_title and item.passing_year %} · {% endif %}{{ item.passing_year }}
+          </span>
+        </div>
+        <form method="POST" action="{% url 'delete_education' item.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn danger">Remove</button>
+        </form>
+      </div>
+    {% empty %}
+      <p class="fav-empty">No education entries yet.</p>
+    {% endfor %}
+
+    <h3 style="margin-top:20px; font-size:1rem;">Add a new entry</h3>
+    <form method="POST" action="{% url 'add_education' %}">
+      {% csrf_token %}
+      <div class="row">
+        <div class="field">
+          <label for="level">Level</label>
+          <select id="level" name="level">
+            <option value="School">School</option>
+            <option value="College">College</option>
+            <option value="University">University</option>
+            <option value="Degree/Other">Degree / Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="passing_year">Year</label>
+          <input type="text" id="passing_year" name="passing_year" placeholder="e.g. 2019">
+        </div>
+      </div>
+      <div class="field">
+        <label for="institution_name">Institution name</label>
+        <input type="text" id="institution_name" name="institution_name" required>
+      </div>
+      <div class="field">
+        <label for="degree_title">Degree / title (optional)</label>
+        <input type="text" id="degree_title" name="degree_title">
+      </div>
+      <div class="field">
+        <label for="description">Short description</label>
+        <textarea id="description" name="description"></textarea>
+      </div>
+      <input type="hidden" name="display_order" value="0">
+      <button type="submit" class="btn primary">Add entry</button>
+    </form>
+  </div>
+
+  <!-- Skills manager -->
+  <div class="admin-card">
+    <h2>Skills</h2>
+
+    {% for item in skills %}
+      <div class="list-item">
+        <div><strong>{{ item.name }}</strong></div>
+        <form method="POST" action="{% url 'delete_skill' item.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn danger">Remove</button>
+        </form>
+      </div>
+    {% empty %}
+      <p class="fav-empty">No skills added yet.</p>
+    {% endfor %}
+
+    <h3 style="margin-top:20px; font-size:1rem;">Add a skill</h3>
+    <form method="POST" action="{% url 'add_skill' %}">
+      {% csrf_token %}
+      <div class="field">
+        <label for="skill_name">Skill</label>
+        <input type="text" id="skill_name" name="skill_name" placeholder="e.g. Lesson planning" required>
+      </div>
+      <input type="hidden" name="display_order" value="0">
+      <button type="submit" class="btn primary">Add skill</button>
+    </form>
+  </div>
+
+  <!-- Favorites manager -->
+  <div class="admin-card">
+    <h2>Favorites manager</h2>
+
+    {% for item in favorites %}
+      <div class="list-item">
+        <div>
+          <strong>[{{ item.category }}]</strong> {{ item.title }}<br>
+          <span style="color:var(--text-soft); font-size:0.88rem;">{{ item.subtitle_or_creator }}</span>
+        </div>
+        <form method="POST" action="{% url 'delete_favorite' item.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn danger">Remove</button>
+        </form>
+      </div>
+    {% empty %}
+      <p class="fav-empty">No favorites added yet.</p>
+    {% endfor %}
+
+    <h3 style="margin-top:20px; font-size:1rem;">Add a favorite (max 4 per category recommended)</h3>
+    <form method="POST" action="{% url 'add_favorite' %}">
+      {% csrf_token %}
+      <div class="row">
+        <div class="field">
+          <label for="category">Category</label>
+          <select id="category" name="category">
+            <option value="Book">Book</option>
+            <option value="Music">Music</option>
+            <option value="Movie">Movie</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="item_order">Order (1–4)</label>
+          <input type="number" id="item_order" name="item_order" min="1" max="4" value="1">
+        </div>
+      </div>
+      <div class="field">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required>
+      </div>
+      <div class="field">
+        <label for="subtitle_or_creator">Author / Artist / Director</label>
+        <input type="text" id="subtitle_or_creator" name="subtitle_or_creator">
+      </div>
+      <div class="field">
+        <label for="media_url">Link (Spotify / trailer / purchase page)</label>
+        <input type="text" id="media_url" name="media_url">
+      </div>
+      <div class="field">
+        <label for="fav_description">Short note / review</label>
+        <textarea id="fav_description" name="description"></textarea>
+      </div>
+      <button type="submit" class="btn primary">Add favorite</button>
+    </form>
+  </div>
+
+  <!-- Security -->
+  <div class="admin-card">
+    <h2>Security &amp; login</h2>
+    <form method="POST" action="{% url 'change_password' %}">
+      {% csrf_token %}
+      <div class="field">
+        <label for="current_password">Current password</label>
+        <input type="password" id="current_password" name="current_password" required>
+      </div>
+      <div class="field">
+        <label for="new_password">New password (min. 8 characters)</label>
+        <input type="password" id="new_password" name="new_password" minlength="8" required>
+      </div>
+      <button type="submit" class="btn primary">Update password</button>
+    </form>
+  </div>
+
+</div>
+</body>
+</html>
